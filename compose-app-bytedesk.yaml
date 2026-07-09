@@ -39,6 +39,8 @@ services:
       BYTEDESK_CUSTOM_MQTT_WEBSOCKET_URL:
       # Public upload API base URL without the upload path, useful for multi-node or reverse-proxy upload setups. 外网上传 API 基础地址，不带上传路径。
       # BYTEDESK_CUSTOM_UPLOAD_API_URL: https://upload.example.com
+      # Public visitor ticket HTML base URL without trailing slash, used in ticket notification emails. 访客工单页面基础地址，不带末尾斜杠。
+      # BYTEDESK_CUSTOM_TICKET_HTML_URL: https://support.example.com/ticket
       # Default WeChat Mini Program goods detail route. 微信小程序商品详情默认跳转路径。
       BYTEDESK_CUSTOM_WECHAT_MINI_PROGRAM_GOODS_DETAIL_PATH: /pages/goods/detail/index
       # Default WeChat Mini Program order detail route. 微信小程序订单详情默认跳转路径。
@@ -55,6 +57,8 @@ services:
       BYTEDESK_CUSTOM_DOC_URL: https://www.weiyuai.cn/docs/zh-CN/
       # Login page language: zh-CN / en-US / zh-TW. 登录页语言。
       BYTEDESK_CUSTOM_LANG: zh-CN
+      # Custom default LLM prompt; leave empty to fall back to the built-in RobotConsts default. 自定义默认 LLM Prompt，留空时回退到内置默认值。
+      BYTEDESK_CUSTOM_DEFAULT_LLM_PROMPT:
       BYTEDESK_CUSTOM_ALLOW_REGISTER: "true"
       # Auto-register users when they log in with mobile/email and no account exists yet. 手机号或邮箱登录时若用户不存在则自动注册。
       BYTEDESK_CUSTOM_AUTO_REGISTER_ON_LOGIN: "true"
@@ -248,6 +252,15 @@ services:
       MANAGEMENT_ZIPKIN_TRACING_ENABLED: "false"
       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://127.0.0.1:19411/api/v2/spans
       MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 0.0
+      # ===============================
+      # Spring Boot Admin Client (bytedesk-monitor)
+      # Uncomment to register this instance with a monitor server. 取消注释以注册到监控服务端。
+      # ===============================
+      # SPRING_BOOT_ADMIN_CLIENT_URL: http://bytedesk-monitor:9103
+      # SPRING_BOOT_ADMIN_CLIENT_USERNAME: admin
+      # SPRING_BOOT_ADMIN_CLIENT_PASSWORD: admin
+      # SPRING_BOOT_ADMIN_CLIENT_INSTANCE_NAME: bytedesk-starter
+      # SPRING_BOOT_ADMIN_CLIENT_INSTANCE_SERVICE_BASE_URL: http://127.0.0.1:9003
       # ===============================
       # AI provider and model selection
       # Select default providers first, then configure API keys and model options for the providers you actually use. 先选择默认 provider，再为实际使用的 provider 配置密钥和模型参数。

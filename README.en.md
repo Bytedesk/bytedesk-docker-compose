@@ -238,11 +238,17 @@ docker compose -p bytedesk -f compose-base.yaml -f compose-db-postgresql.yaml -f
 
 ## Logstash Log Ingestion
 
-`compose-base.yaml` now includes `bytedesk-logstash`, which tails `/app/logs/bytedeskim.log` from the shared application log volume and writes the events into Elasticsearch.
+`compose-base.yaml` now includes `bytedesk-logstash`, which collects logs from both of these sources by default:
+
+- Docker app container logs written to the shared `/app/logs/bytedeskim.log`
+- Local source-run logs written to [starter/logs](starter/logs)/bytedeskim.log
 
 ```bash
 # Start the full stack; Logstash will begin shipping Bytedesk application logs automatically
 ./start.sh mysql artemis standard all
+
+# If you run starter from source locally, only Logstash needs to be up; starter/logs/bytedeskim.log will also be collected
+docker compose -p bytedesk --env-file .env -f compose-base.yaml up -d bytedesk-logstash
 
 # Inspect Logstash status and logs
 docker compose -p bytedesk --env-file .env -f compose-base.yaml ps bytedesk-logstash
@@ -260,6 +266,8 @@ Notes:
 - The Logstash monitoring API is exposed on port `19600`.
 - Log indices are named `bytedesk-logs-YYYY.MM.dd`.
 - The pipeline merges Java stack traces, and the application file log is now emitted as plain text for clean Elasticsearch indexing.
+- For local source runs, Logstash reads starter/logs/bytedeskim.log by default.
+- If starter is already running locally, restart that source-run process once after this update so the new plain-text file logging pattern takes effect; newly written lines will then be parsed and indexed reliably.
 
 ## Kibana Log Viewer
 
@@ -303,3 +311,38 @@ Suggested query flow:
 - Select the `bytedesk-logs-*` data view
 - Search for `requestId : "a9d759fa-f7af-4551-b219-9d358403553d"`
 - Or search for `message : "Completed 200 OK"` to inspect one request path
+
+## more info
+
+config docker engine
+
+```bash
+{
+  "builder": {
+    "gc": {
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    }
+  },
+  "debug": true,
+  "experimental": true,
+  "insecure-registries": [
+    "121.37.217.138:5000"
+  ],
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.mybacc.com",
+    "https://dytt.online",
+    "https://lispy.org",
+    "https://docker.xiaogenban1993.com",
+    "https://docker.yomansunter.com",
+    "https://aicarbon.xyz",
+    "https://666860.xyz",
+    "https://docker.zhai.cm",
+    "https://a.ussh.net",
+    "https://hub.littlediary.cn",
+    "https://hub.rat.dev",
+    "https://docker.m.daocloud.io"
+  ]
+}
+```

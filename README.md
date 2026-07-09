@@ -257,11 +257,17 @@ docker compose -p bytedesk -f compose-base.yaml -f compose-db-mysql.yaml -f comp
 
 ## Logstash 日志采集
 
-`compose-base.yaml` 已内置 `bytedesk-logstash`，会把应用容器写入共享卷 `/app/logs/bytedeskim.log` 的日志采集到 Elasticsearch。
+`compose-base.yaml` 已内置 `bytedesk-logstash`，默认同时采集两类日志：
+
+- Docker 应用容器写入共享卷 `/app/logs/bytedeskim.log` 的日志
+- 本地源码运行写入 [starter/logs](starter/logs) 的 `bytedeskim.log`
 
 ```bash
 # 启动全量服务后，Logstash 会自动读取 bytedesk 应用日志并写入 Elasticsearch
 ./start.sh mysql artemis standard all
+
+# 如果你是本地源码运行 starter，只需要保证 Logstash 已启动，starter/logs/bytedeskim.log 也会被采集
+docker compose -p bytedesk --env-file .env -f compose-base.yaml up -d bytedesk-logstash
 
 # 查看 Logstash 运行状态
 docker compose -p bytedesk --env-file .env -f compose-base.yaml ps bytedesk-logstash
@@ -279,6 +285,8 @@ curl -u elastic:${ELASTIC_PASSWORD} 'http://127.0.0.1:19200/bytedesk-logs-*/_sea
 - Logstash 监控接口暴露在 `19600` 端口。
 - 日志索引命名为 `bytedesk-logs-YYYY.MM.dd`。
 - 管道会自动合并 Java 异常堆栈；应用文件日志已切换为纯文本格式，便于在 Elasticsearch 中检索。
+- 本地源码运行时，默认读取 [starter/logs](starter/logs) 下的 `bytedeskim.log`。
+- 如果 starter 已经在本地运行，请在本次更新后重启一次源码进程，让新的纯文本文件日志格式生效；重启后新写入的日志会被稳定解析并按字段入库。
 
 ## Kibana 日志查询
 
@@ -553,4 +561,39 @@ docker stats
 
 # 查看容器镜像架构
 docker inspect registry.cn-hangzhou.aliyuncs.com/bytedesk/bytedesk:latest --format='{{.Architecture}}'
+```
+
+## 补充说明
+
+配置docker engine
+
+```bash
+{
+  "builder": {
+    "gc": {
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    }
+  },
+  "debug": true,
+  "experimental": true,
+  "insecure-registries": [
+    "121.37.217.138:5000"
+  ],
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.mybacc.com",
+    "https://dytt.online",
+    "https://lispy.org",
+    "https://docker.xiaogenban1993.com",
+    "https://docker.yomansunter.com",
+    "https://aicarbon.xyz",
+    "https://666860.xyz",
+    "https://docker.zhai.cm",
+    "https://a.ussh.net",
+    "https://hub.littlediary.cn",
+    "https://hub.rat.dev",
+    "https://docker.m.daocloud.io"
+  ]
+}
 ```
