@@ -201,6 +201,8 @@ services:
     volumes:
       # 配置文件目录 - 使用本地配置文件覆盖容器内的配置（经验证实际使用 /usr/local/freeswitch/etc/freeswitch）
       - ../freeswitch/conf:/usr/local/freeswitch/etc/freeswitch
+      # Lua 脚本目录 - 92-ai-bot 等拨号计划依赖 nlsml_to_text.lua
+      - ../freeswitch/scripts:/usr/local/freeswitch/share/freeswitch/scripts
       # 数据持久化目录
       - freeswitch_data:/usr/local/freeswitch/db
       # 日志目录
@@ -414,6 +416,14 @@ services:
       BYTEDESK_CALL_FREESWITCH_WEBRTC_PORT: 7443
       BYTEDESK_CALL_FREESWITCH_WS_PORT: 5066
       BYTEDESK_CALL_FREESWITCH_CALL_TIMEOUT: 120
+      BYTEDESK_CALL_MRCP_ENABLED: "false"
+      BYTEDESK_CALL_MRCP_PROFILE: java-mrcp
+      BYTEDESK_CALL_MRCP_HOST: 0.0.0.0
+      BYTEDESK_CALL_MRCP_PORT: 1544
+      BYTEDESK_CALL_MRCP_TTS_PROVIDER: dashscope
+      BYTEDESK_CALL_MRCP_ASR_PROVIDER: dashscope
+      BYTEDESK_CALL_MRCP_ASR_MODE: recording-file
+      BYTEDESK_CALL_MRCP_TTS_VOICE: longanhuan
       # WebRTC / Janus config
       BYTEDESK_WEBRTC_JANUS_ENABLED: "true"
       BYTEDESK_WEBRTC_JANUS_WS_URL: ws://bytedesk-janus:8188/janus
