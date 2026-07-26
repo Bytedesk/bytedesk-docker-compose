@@ -155,6 +155,14 @@ local function normalize_playback_url(value)
   end
   value = value:gsub("//localhost:", "//host.docker.internal:")
   value = value:gsub("//127%.0%.0%.1:", "//host.docker.internal:")
+
+  local lower = string.lower(value)
+  local lower_without_suffix = lower:gsub("[%?#].*$", "")
+  if string.match(lower, "^https?://") and string.sub(lower_without_suffix, -4) == ".mp3" then
+    local normalized = value:gsub("^https?://", "")
+    return "shout://" .. normalized
+  end
+
   return value
 end
 
@@ -217,6 +225,13 @@ local function play_dynamic_hotline_welcome()
   local welcome_type = string.upper(first_non_blank(welcome and welcome.welcomeType, "TTS"))
   local welcome_audio_url = normalize_playback_url(welcome and welcome.welcomeAudioUrl)
   local welcome_text = first_non_blank(welcome and welcome.welcomeText, default_text)
+
+  freeswitch.consoleLog("INFO", string.format("[AI-HOTLINE-REALTIME] welcome resolved uuid=%s did=%s type=%s rawAudioUrl=%s playbackUrl=%s\n",
+    uuid,
+    bot_did,
+    welcome_type,
+    first_non_blank(welcome and welcome.welcomeAudioUrl),
+    welcome_audio_url))
 
   if welcome_type == "AUDIO" and welcome_audio_url ~= "" then
     session:execute("playback", welcome_audio_url)
