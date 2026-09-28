@@ -80,7 +80,9 @@ services:
       
   # ElasticSearch 向量数据库
   bytedesk-elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.2
+    # image: docker.elastic.co/elasticsearch/elasticsearch:9.4.2
+    image: dockerproxy.net/library/elasticsearch:9.4.2
+    # image: elasticsearch:9.4.2
     container_name: elasticsearch-bytedesk
     environment:
       - node.name=bytedesk-es01
@@ -114,7 +116,9 @@ services:
   # https://www.elastic.co/guide/en/logstash/9.4/docker.html
   # Logstash 日志采集中转
   bytedesk-logstash:
-    image: docker.elastic.co/logstash/logstash:9.4.2
+    # image: docker.elastic.co/logstash/logstash:9.4.2
+    image: dockerproxy.net/library/logstash:9.4.2
+    # image: logstash:9.4.2
     container_name: logstash-bytedesk
     depends_on:
       - bytedesk-elasticsearch
@@ -136,7 +140,9 @@ services:
 
   # Kibana 日志查询界面
   bytedesk-kibana:
-    image: docker.elastic.co/kibana/kibana:9.4.2
+    # image: docker.elastic.co/kibana/kibana:9.4.2
+    image: dockerproxy.net/library/kibana:9.4.2
+    # image: kibana:9.4.2
     container_name: kibana-bytedesk
     depends_on:
       - bytedesk-elasticsearch
