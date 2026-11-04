@@ -13,6 +13,8 @@
 -->
 # docker
 
+**语言 / Language:** [中文](README.zh.md) | [English](README.md) | [Demo](https://www.weiyuai.cn/reactdemo)
+
 ## docker compose
 
 ```bash
