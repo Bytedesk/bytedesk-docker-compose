@@ -5,58 +5,52 @@
 -->
 # docker
 
-每个镜像一个独立 compose 文件（一镜像一文件），统一存放在 [`compose/`](./compose/) 目录，通过 `start.sh`/`stop.sh` 的关键字参数自由组合启动，不再有 db/mq/scenario 等分层文件。根目录仅保留 readme 说明、启停脚本与 `.env` 配置。
+One compose file per image, all collected in the [`compose/`](./compose/) folder, freely combined via `start.sh`/`stop.sh` keyword arguments. No more db/mq/scenario layered files. The root folder only keeps the readme docs, launcher scripts and `.env` config.
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 克隆项目
+# clone project
 git clone https://github.com/Bytedesk/bytedesk.git
 cd bytedesk/deploy/docker
 
-# 配置环境变量（按需修改密码/密钥）
+# configure environment variables (adjust passwords/keys as needed)
 cp .env.example .env
 
-# 默认启动全栈（mysql + artemis + redis + elasticsearch + bytedesk 应用）
+# start the default full stack (mysql + artemis + redis + elasticsearch + bytedesk app)
 ./start.sh
 
-# 访问 http://127.0.0.1:9003，默认账号 admin@email.com / admin
+# visit http://127.0.0.1:9003, default account admin@email.com / admin
 ```
 
-## 常用命令
+## Common Commands
 
 ```bash
-# 默认全栈（等价 ./start.sh all）
+# default full stack (equals ./start.sh all)
 ./start.sh
-./stop.sh              # 停止
-./stop.sh down         # 删除容器（保留数据卷）
+./stop.sh              # stop
+./stop.sh down         # remove containers (volumes kept)
 
-# 仅中间件（源码本地开发，不启动 bytedesk 应用镜像）
+# middleware only (for local source development)
 ./start.sh middleware
 ./stop.sh middleware down
 
-# 切换数据库 / 消息队列（四选一 db，二选一 mq）
+# switch database / message queue (choose 1 db, 1 mq)
 ./start.sh postgresql rabbitmq middleware
 ./start.sh oracle middleware
 ./start.sh kingbase all
 
-# 呼叫中心（call = freeswitch + mrcp；仅支持 mysql/postgresql）
+# call center (call = freeswitch + mrcp; mysql/postgresql only)
 ./start.sh call all
 ./start.sh call middleware
 ./stop.sh call middleware down
 
-# WebRTC 音视频（webrtc = coturn + janus）
-./start.sh call webrtc all
-./start.sh call webrtc middleware minio searxng neo4j  # 任意组合
-./stop.sh call webrtc middleware minio searxng neo4j down
-## 使用 postgresql
-./start.sh postgresql call webrtc middleware minio searxng neo4j  # 任意组合
-./stop.sh postgresql call webrtc middleware minio searxng neo4j down
-# 之后反复切库，几秒完成
-./switch-db.sh mysql
-./switch-db.sh postgresql
+# WebRTC audio/video (webrtc = coturn + janus)
+./start.sh webrtc all
+./start.sh call webrtc middleware obs minio mrcp searxng   # free combination
+./stop.sh call webrtc middleware obs minio mrcp searxng down
 
-# 可选组件（任意组合）
+# optional components (any combination)
 ./start.sh all minio searxng james
 ./start.sh middleware obs        # obs = prometheus + grafana + zipkin + otelcol
 ./stop.sh middleware obs
@@ -64,68 +58,70 @@ cp .env.example .env
 ./stop.sh middleware logstash kibana down
 ```
 
-## 关键字速查
+## Keyword Reference
 
-| 类别 | 关键字（别名） | 说明 |
+| Category | Keywords (alias) | Notes |
 | --- | --- | --- |
-| 数据库（四选一，默认 mysql） | `mysql` `postgresql`(pg) `oracle` `kingbase`(kingbase9) | 自动建库 |
-| 消息队列（二选一，默认 artemis） | `artemis` `rabbitmq` | |
-| 核心中间件 | `redis` `elasticsearch`(es) | 任何栈自动包含 |
-| 呼叫中心 | `freeswitch` `mrcp`，组合 `call` | call 仅支持 mysql/postgresql |
-| WebRTC | `coturn` `janus`，组合 `webrtc` | |
-| 搜索/存储 | `searxng`(search) `minio` `rustfs` `neo4j` | rustfs = S3 兼容对象存储（Apache 2.0，MinIO 开源替代）；企业版功能 |
-| 邮件服务器 | `james` | Apache James 私有邮件服务器：定位企业内部员工邮件沟通（协同）；通知/验证码等轻量邮件建议继续用第三方邮箱，详见 [James 文档](./readme/readme.james.md) |
-| 日志 | `logstash` `kibana` | 依赖 elasticsearch |
-| 可观测 | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry)，组合 `obs` | 追踪后端二选一：zipkin（Brave）或 otelcol（OTLP），详见 [可观测性文档](./readme/readme.observability.md) |
-| 目标 | `middleware` / `all`(bytedesk)，默认 all | 展开见下表 |
+| Database (pick 1, default mysql) | `mysql` `postgresql`(pg) `oracle` `kingbase`(kingbase9) | auto-created |
+| Message queue (pick 1, default artemis) | `artemis` `rabbitmq` | |
+| Core middleware | `redis` `elasticsearch`(es) | always included |
+| Call center | `freeswitch` `mrcp`, combo `call` | call supports mysql/postgresql only |
+| WebRTC | `coturn` `janus`, combo `webrtc` | |
+| Search/storage | `searxng`(search) `minio` `rustfs` `neo4j` | rustfs = S3-compatible storage, Apache 2.0 MinIO successor; enterprise feature |
+| Mail server | `james` | Apache James private mail server for internal employee email (collaboration); lightweight mails (notifications/codes) still best via third-party SMTP, see [James docs](./readme/readme.james.md) |
+| File preview | `gotenberg` | Office→PDF conversion sidecar, enterprise feature; enable via `BYTEDESK_PREVIEW_CONVERT_ENABLED=true` + `BYTEDESK_PREVIEW_CONVERT_MODE=remote` |
+| Logging | `logstash` `kibana` | depends on elasticsearch |
+| Observability | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry), combo `obs` | tracing backend: zipkin (Brave) or otelcol (OTLP), see [observability readme](./readme/readme.observability.md) |
+| Target | `middleware` / `all`(bytedesk), default all | expansion see below |
 
-### all / middleware 对应镜像
+### all / middleware expansion
 
-| 目标关键字 | 展开包含的镜像（compose 文件） | 说明 |
+| Target keyword | Included images (compose files) | Notes |
 | --- | --- | --- |
-| `all`（默认） | `middleware` 全部 + **bytedesk 应用**（compose-redis + compose-elasticsearch + compose-<db> + compose-<mq> + compose-bytedesk） | 全栈：中间件 + 应用镜像 |
-| `middleware` | compose-redis + compose-elasticsearch + compose-<所选db> + compose-<所选mq> | 仅中间件，**不含** bytedesk 应用，用于源码本地开发 |
+| `all` (default) | everything in `middleware` + **bytedesk app** (compose-redis + compose-elasticsearch + compose-<db> + compose-<mq> + compose-bytedesk) | full stack: middleware + app image |
+| `middleware` | compose-redis + compose-elasticsearch + compose-<db> + compose-<mq> | middleware only, **without** the bytedesk app; for local source development |
 
-说明：redis 与 elasticsearch 为核心中间件，任何栈都自动包含；`<所选db>` 默认 mysql（可选 postgresql/oracle/kingbase），`<所选mq>` 默认 artemis（可选 rabbitmq）；其余组件（freeswitch、obs、minio 等）按关键字叠加。
+Note: redis and elasticsearch are core middleware always included; `<db>` defaults to mysql (postgresql/oracle/kingbase optional), `<mq>` defaults to artemis (rabbitmq optional); extra components (freeswitch, obs, minio, ...) stack on top via keywords.
 
-停止动作：`./stop.sh [stop|down] [关键字...]`，动作词可在任意位置，关键字与启动时一致；`down` 删除容器保留数据卷。
+Stop: `./stop.sh [stop|down] [keywords...]` — the action keyword may appear anywhere; pass the same keywords used at start; `down` removes containers but keeps volumes.
 
-## 文件清单
+## File List
 
-所有 compose 文件及各组件配套配置（`searxng/`、`grafana/`、`logstash/`、`prometheus.yml`、`ik-plugin-cache/`、`james/`）均位于 [`compose/`](./compose/) 目录：
+All compose files and their per-component configs (`searxng/`, `grafana/`, `logstash/`, `prometheus.yml`, `ik-plugin-cache/`, `james/`) live in the [`compose/`](./compose/) folder:
 
-| compose 文件（位于 compose/） | 镜像 | 默认端口 | 详细说明 |
+| Compose file (in compose/) | Image | Default ports | Details |
 | --- | --- | --- | --- |
 | compose/compose-redis.yaml | redis | 16379 | — |
 | compose/compose-elasticsearch.yaml | elasticsearch:9.4.2 | 19200/19300 | — |
-| compose/compose-mysql.yaml | mysql | 13306 | [数据库](./readme/readme.database.md) |
-| compose/compose-postgresql.yaml | postgres:17 | 15432 | [数据库](./readme/readme.database.md) |
-| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [数据库](./readme/readme.database.md) |
-| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [数据库](./readme/readme.database.md) |
-| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [消息队列](./readme/readme.mq.md) |
-| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [消息队列](./readme/readme.mq.md) |
-| compose/compose-bytedesk.yaml | bytedesk 应用 | 9003/9885 | — |
+| compose/compose-mysql.yaml | mysql | 13306 | [Database](./readme/readme.database.md) |
+| compose/compose-postgresql.yaml | postgres:17 | 15432 | [Database](./readme/readme.database.md) |
+| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [Database](./readme/readme.database.md) |
+| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [Database](./readme/readme.database.md) |
+| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [Message queue](./readme/readme.mq.md) |
+| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [Message queue](./readme/readme.mq.md) |
+| compose/compose-bytedesk.yaml | bytedesk app | 9003/9885 | — |
 | compose/compose-freeswitch.yaml | bytedesk/freeswitch | 15060/18021 | [FreeSWITCH](./readme/readme.freeswitch.md) |
-| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [呼叫中心](./readme/readme.call.md) |
+| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [Call center](./readme/readme.call.md) |
 | compose/compose-coturn.yaml | coturn:4.6.3 | 13478 | [WebRTC](./readme/readme.webrtc.md) |
 | compose/compose-janus.yaml | bytedesk/janus | 18089/18188 | [WebRTC](./readme/readme.webrtc.md) |
 | compose/compose-searxng.yaml | searxng | 18888 | [SearXNG](./readme/readme.searxng.md) |
-| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j 知识图谱](./readme/readme.neo4j.md) |
+| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j](./readme/readme.neo4j.md) |
 | compose/compose-logstash.yaml | logstash:9.4.2 | 19600 | [Logstash](./readme/readme.logstash.md) |
 | compose/compose-kibana.yaml | kibana:9.4.2 | 15601 | [Kibana](./readme/readme.kibana.md) |
 | compose/compose-minio.yaml | minio | 19000/19001 | [MinIO](./readme/readme.minio.md) |
 | compose/compose-rustfs.yaml | rustfs | 19000/19001 | [RustFS](./readme/readme.rustfs.md) |
-| compose/compose-prometheus.yaml | prometheus | 19090 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-grafana.yaml | grafana | 13000 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-zipkin.yaml | zipkin | 19411 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [可观测性](./readme/readme.observability.md)——OTLP 接收，trace 转发 Zipkin |
-| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James 邮件服务器](./readme/readme.james.md) |
+| compose/compose-prometheus.yaml | prometheus | 19090 | [Observability](./readme/readme.observability.md) |
+| compose/compose-grafana.yaml | grafana | 13000 | [Observability](./readme/readme.observability.md) |
+| compose/compose-zipkin.yaml | zipkin | 19411 | [Observability](./readme/readme.observability.md) |
+| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [Observability](./readme/readme.observability.md) — OTLP receiver, forwards traces to Zipkin |
+| compose/compose-gotenberg.yaml | gotenberg/gotenberg:8 | internal only (no host port) | File preview conversion sidecar; see [File Preview docs](../../../docs/docs/development/filepreview.md) |
+| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James mail server](./readme/readme.james.md) |
 
-其他文件：`start.sh`/`stop.sh`（组合启停）、`watchdog.sh`（应用看门狗，详见 [watchdog 使用说明](./readme/readme.watchdog.md)）、`.env`（敏感配置）、`one/`（all-in-one 单文件部署）。
+Other files: `start.sh`/`stop.sh` (compose launcher), `watchdog.sh` (app watchdog, see [watchdog guide](./readme/readme.watchdog.md)), `.env` (secrets), `one/` (all-in-one deployment).
 
-## 手动执行 docker compose
+## Manual docker compose
 
-如需绕过脚本手动操作，在 `deploy/docker` 目录执行（`--env-file .env` 加载敏感配置）：
+To bypass the scripts, run from the `deploy/docker` directory (`--env-file .env` loads the secrets):
 
 ```bash
 docker compose --env-file .env -p bytedesk \
@@ -134,23 +130,8 @@ docker compose --env-file .env -p bytedesk \
   -f compose/compose-bytedesk.yaml up -d
 ```
 
-说明：compose 文件内的相对路径（`./searxng`、`../../freeswitch` 等）均以 `compose/` 目录为基准解析；`.env` 中 `KINGBASE_LICENSE_FILE`、`MRCP_*_DIR` 等相对路径同样相对于 `compose/` 目录。容器名、数据卷名、网络名保持不变，存量数据无缝延续。
+Note: relative paths inside the compose files (`./searxng`, `../../freeswitch`, ...) resolve against the `compose/` directory; relative values in `.env` (such as `KINGBASE_LICENSE_FILE`, `MRCP_*_DIR`) do as well. Container names, volume names and network names are unchanged, so existing data carries over seamlessly.
 
-## 更多说明
+## More
 
-详细文档位于 [readme/](./readme/) 目录：
-
-- [快速开始与常见问题](./readme/readme.quickstart.md)
-- [数据库切换与自动建库](./readme/readme.database.md)
-- [消息队列切换](./readme/readme.mq.md)
-- [呼叫中心（FreeSWITCH + MRCP）](./readme/readme.call.md) / [FreeSWITCH 详细配置](./readme/readme.freeswitch.md)
-- [WebRTC 音视频（coturn + janus）](./readme/readme.webrtc.md)
-- [SearXNG 联网搜索](./readme/readme.searxng.md)（企业版）
-- [Neo4j 知识图谱](./readme/readme.neo4j.md)（企业版）
-- [Logstash 日志采集](./readme/readme.logstash.md) / [Kibana 日志查询](./readme/readme.kibana.md)
-- [MinIO 对象存储](./readme/readme.minio.md)
-- [James 私有邮件服务器](./readme/readme.james.md)
-- [可观测性（Prometheus + Grafana + Zipkin + OTel Collector）](./readme/readme.observability.md)
-- [watchdog.sh 应用看门狗](./readme/readme.watchdog.md)
-- [环境变量说明](./readme/readme.env.md)
-- [旧版本迁移指南](./readme/readme.migration.md)
+Detailed docs live in [readme/](./readme/): [quickstart](./readme/readme.quickstart.md) · [database](./readme/readme.database.md) · [message queue](./readme/readme.mq.md) · [call center](./readme/readme.call.md) · [FreeSWITCH](./readme/readme.freeswitch.md) · [WebRTC](./readme/readme.webrtc.md) · [SearXNG](./readme/readme.searxng.md) · [Neo4j](./readme/readme.neo4j.md) · [Logstash](./readme/readme.logstash.md) · [Kibana](./readme/readme.kibana.md) · [MinIO](./readme/readme.minio.md) · [James mail server](./readme/readme.james.md) · [observability](./readme/readme.observability.md) · [watchdog](./readme/readme.watchdog.md) · [env vars](./readme/readme.env.md) · [migration guide](./readme/readme.migration.md)
