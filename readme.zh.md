@@ -90,9 +90,9 @@ sudo ls -lh /var/lib/docker/volumes/bytedesk_log_data/_data/
 | 呼叫中心 | `freeswitch` `mrcp`，组合 `call` | call 仅支持 mysql/postgresql |
 | WebRTC | `coturn` `janus`，组合 `webrtc` | |
 | 搜索/存储 | `searxng`(search) `minio` `rustfs` `neo4j` | rustfs = S3 兼容对象存储（Apache 2.0，MinIO 开源替代）；企业版功能 |
-| 邮件服务器 | `james` | Apache James 私有邮件服务器：定位企业内部员工邮件沟通（协同）；通知/验证码等轻量邮件建议继续用第三方邮箱，详见 [James 文档](./readme/readme.james.md) |
+| 邮件服务器 | `james` | Apache James 私有邮件服务器：定位企业内部员工邮件沟通（协同）；通知/验证码等轻量邮件建议继续用第三方邮箱，详见 [James 文档](./docker/readme/readme./readme.james.md) |
 | 日志 | `logstash` `kibana` | 依赖 elasticsearch |
-| 可观测 | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry)，组合 `obs` | 追踪后端二选一：zipkin（Brave）或 otelcol（OTLP），详见 [可观测性文档](./readme/readme.observability.md) |
+| 可观测 | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry)，组合 `obs` | 追踪后端二选一：zipkin（Brave）或 otelcol（OTLP），详见 [可观测性文档](./docker/readme/readme./readme.observability.md) |
 | 目标 | `middleware` / `all`(bytedesk)，默认 all | 展开见下表 |
 
 ### all / middleware 对应镜像
@@ -114,27 +114,27 @@ sudo ls -lh /var/lib/docker/volumes/bytedesk_log_data/_data/
 | --- | --- | --- | --- |
 | compose/compose-redis.yaml | redis | 16379 | — |
 | compose/compose-elasticsearch.yaml | elasticsearch:9.4.2 | 19200/19300 | — |
-| compose/compose-mysql.yaml | mysql | 13306 | [数据库](./readme/readme.database.md) |
-| compose/compose-postgresql.yaml | postgres:17 | 15432 | [数据库](./readme/readme.database.md) |
-| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [数据库](./readme/readme.database.md) |
-| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [数据库](./readme/readme.database.md) |
-| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [消息队列](./readme/readme.mq.md) |
-| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [消息队列](./readme/readme.mq.md) |
+| compose/compose-mysql.yaml | mysql | 13306 | [数据库](./docker/readme/readme./readme.database.md) |
+| compose/compose-postgresql.yaml | postgres:17 | 15432 | [数据库](./docker/readme/readme./readme.database.md) |
+| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [数据库](./docker/readme/readme./readme.database.md) |
+| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [数据库](./docker/readme/readme./readme.database.md) |
+| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [消息队列](./docker/readme/readme./readme.mq.md) |
+| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [消息队列](./docker/readme/readme./readme.mq.md) |
 | compose/compose-bytedesk.yaml | bytedesk 应用 | 9003/9885 | — |
-| compose/compose-freeswitch.yaml | bytedesk/freeswitch | 15060/18021 | [FreeSWITCH](./readme/readme.freeswitch.md) |
-| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [呼叫中心](./readme/readme.call.md) |
-| compose/compose-coturn.yaml | coturn:4.6.3 | 13478 | [WebRTC](./readme/readme.webrtc.md) |
-| compose/compose-janus.yaml | bytedesk/janus | 18089/18188 | [WebRTC](./readme/readme.webrtc.md) |
-| compose/compose-searxng.yaml | searxng | 18888 | [SearXNG](./readme/readme.searxng.md) |
-| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j 知识图谱](./readme/readme.neo4j.md) |
-| compose/compose-logstash.yaml | logstash:9.4.2 | 19600 | [Logstash](./readme/readme.logstash.md) |
-| compose/compose-kibana.yaml | kibana:9.4.2 | 15601 | [Kibana](./readme/readme.kibana.md) |
-| compose/compose-minio.yaml | minio | 19000/19001 | [MinIO](./readme/readme.minio.md) |
-| compose/compose-rustfs.yaml | rustfs | 19000/19001 | [RustFS](./readme/readme.rustfs.md) |
-| compose/compose-prometheus.yaml | prometheus | 19090 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-grafana.yaml | grafana | 13000 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-zipkin.yaml | zipkin | 19411 | [可观测性](./readme/readme.observability.md) |
-| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [可观测性](./readme/readme.observability.md)——OTLP 接收，trace 转发 Zipkin |
-| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James 邮件服务器](./readme/readme.james.md) |
+| compose/compose-freeswitch.yaml | bytedesk/freeswitch | 15060/18021 | [FreeSWITCH](./docker/readme/readme./readme.freeswitch.md) |
+| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [呼叫中心](./docker/readme/readme./readme.call.md) |
+| compose/compose-coturn.yaml | coturn:4.6.3 | 13478 | [WebRTC](./docker/readme/readme./readme.webrtc.md) |
+| compose/compose-janus.yaml | bytedesk/janus | 18089/18188 | [WebRTC](./docker/readme/readme./readme.webrtc.md) |
+| compose/compose-searxng.yaml | searxng | 18888 | [SearXNG](./docker/readme/readme./readme.searxng.md) |
+| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j 知识图谱](./docker/readme/readme./readme.neo4j.md) |
+| compose/compose-logstash.yaml | logstash:9.4.2 | 19600 | [Logstash](./docker/readme/readme./readme.logstash.md) |
+| compose/compose-kibana.yaml | kibana:9.4.2 | 15601 | [Kibana](./docker/readme/readme./readme.kibana.md) |
+| compose/compose-minio.yaml | minio | 19000/19001 | [MinIO](./docker/readme/readme./readme.minio.md) |
+| compose/compose-rustfs.yaml | rustfs | 19000/19001 | [RustFS](./docker/readme/readme./readme.rustfs.md) |
+| compose/compose-prometheus.yaml | prometheus | 19090 | [可观测性](./docker/readme/readme./readme.observability.md) |
+| compose/compose-grafana.yaml | grafana | 13000 | [可观测性](./docker/readme/readme./readme.observability.md) |
+| compose/compose-zipkin.yaml | zipkin | 19411 | [可观测性](./docker/readme/readme./readme.observability.md) |
+| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [可观测性](./docker/readme/readme./readme.observability.md)——OTLP 接收，trace 转发 Zipkin |
+| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James 邮件服务器](./docker/readme/readme./readme.james.md) |
 
-其他文件：`start.sh`/`stop.sh`（组合启停）、`watchdog.sh`（应用看门狗，详见 [watchdog 使用说明](./readme/readme.watchdog.md)）、`.env`（敏感配置）、`one/`（all-in-one 单文件部署）。
+其他文件：`start.sh`/`stop.sh`（组合启停）、`watchdog.sh`（应用看门狗，详见 [watchdog 使用说明](./docker/readme/readme./readme.watchdog.md)）、`.env`（敏感配置）、`one/`（all-in-one 单文件部署）。

@@ -85,10 +85,10 @@ sudo ls -lh /var/lib/docker/volumes/bytedesk_log_data/_data/
 | Call center | `freeswitch` `mrcp`, combo `call` | call supports mysql/postgresql only |
 | WebRTC | `coturn` `janus`, combo `webrtc` | |
 | Search/storage | `searxng`(search) `minio` `rustfs` `neo4j` | rustfs = S3-compatible storage, Apache 2.0 MinIO successor; enterprise feature |
-| Mail server | `james` | Apache James private mail server for internal employee email (collaboration); lightweight mails (notifications/codes) still best via third-party SMTP, see [James docs](./readme/readme.james.md) |
+| Mail server | `james` | Apache James private mail server for internal employee email (collaboration); lightweight mails (notifications/codes) still best via third-party SMTP, see [James docs](./docker/readme/readme./readme.james.md) |
 | File preview | `gotenberg` | Office→PDF conversion sidecar, enterprise feature; enable via `BYTEDESK_PREVIEW_CONVERT_ENABLED=true` + `BYTEDESK_PREVIEW_CONVERT_MODE=remote` |
 | Logging | `logstash` `kibana` | depends on elasticsearch |
-| Observability | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry), combo `obs` | tracing backend: zipkin (Brave) or otelcol (OTLP), see [observability readme](./readme/readme.observability.md) |
+| Observability | `prometheus` `grafana` `zipkin` `otelcol`(opentelemetry), combo `obs` | tracing backend: zipkin (Brave) or otelcol (OTLP), see [observability readme](./docker/readme/readme./readme.observability.md) |
 | Target | `middleware` / `all`(bytedesk), default all | expansion see below |
 
 ### all / middleware expansion
@@ -110,28 +110,28 @@ All compose files and their per-component configs (`searxng/`, `grafana/`, `logs
 | --- | --- | --- | --- |
 | compose/compose-redis.yaml | redis | 16379 | — |
 | compose/compose-elasticsearch.yaml | elasticsearch:9.4.2 | 19200/19300 | — |
-| compose/compose-mysql.yaml | mysql | 13306 | [Database](./readme/readme.database.md) |
-| compose/compose-postgresql.yaml | postgres:17 | 15432 | [Database](./readme/readme.database.md) |
-| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [Database](./readme/readme.database.md) |
-| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [Database](./readme/readme.database.md) |
-| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [Message queue](./readme/readme.mq.md) |
-| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [Message queue](./readme/readme.mq.md) |
+| compose/compose-mysql.yaml | mysql | 13306 | [Database](./docker/readme/readme./readme.database.md) |
+| compose/compose-postgresql.yaml | postgres:17 | 15432 | [Database](./docker/readme/readme./readme.database.md) |
+| compose/compose-oracle.yaml | gvenzl/oracle-free:23-slim | 11521 | [Database](./docker/readme/readme./readme.database.md) |
+| compose/compose-kingbase.yaml | kingbase V9 | 54321 | [Database](./docker/readme/readme./readme.database.md) |
+| compose/compose-artemis.yaml | activemq-artemis:2.40.0 | 16161/18161 | [Message queue](./docker/readme/readme./readme.mq.md) |
+| compose/compose-rabbitmq.yaml | rabbitmq:4.2.3 | 5673/15673 | [Message queue](./docker/readme/readme./readme.mq.md) |
 | compose/compose-bytedesk.yaml | bytedesk app | 9003/9885 | — |
-| compose/compose-freeswitch.yaml | bytedesk/freeswitch | 15060/18021 | [FreeSWITCH](./readme/readme.freeswitch.md) |
-| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [Call center](./readme/readme.call.md) |
-| compose/compose-coturn.yaml | coturn:4.6.3 | 13478 | [WebRTC](./readme/readme.webrtc.md) |
-| compose/compose-janus.yaml | bytedesk/janus | 18089/18188 | [WebRTC](./readme/readme.webrtc.md) |
-| compose/compose-searxng.yaml | searxng | 18888 | [SearXNG](./readme/readme.searxng.md) |
-| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j](./readme/readme.neo4j.md) |
-| compose/compose-logstash.yaml | logstash:9.4.2 | 19600 | [Logstash](./readme/readme.logstash.md) |
-| compose/compose-kibana.yaml | kibana:9.4.2 | 15601 | [Kibana](./readme/readme.kibana.md) |
-| compose/compose-minio.yaml | minio | 19000/19001 | [MinIO](./readme/readme.minio.md) |
-| compose/compose-rustfs.yaml | rustfs | 19000/19001 | [RustFS](./readme/readme.rustfs.md) |
-| compose/compose-prometheus.yaml | prometheus | 19090 | [Observability](./readme/readme.observability.md) |
-| compose/compose-grafana.yaml | grafana | 13000 | [Observability](./readme/readme.observability.md) |
-| compose/compose-zipkin.yaml | zipkin | 19411 | [Observability](./readme/readme.observability.md) |
-| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [Observability](./readme/readme.observability.md) — OTLP receiver, forwards traces to Zipkin |
+| compose/compose-freeswitch.yaml | bytedesk/freeswitch | 15060/18021 | [FreeSWITCH](./docker/readme/readme./readme.freeswitch.md) |
+| compose/compose-mrcp.yaml | bytedesk/mrcp | 11544 | [Call center](./docker/readme/readme./readme.call.md) |
+| compose/compose-coturn.yaml | coturn:4.6.3 | 13478 | [WebRTC](./docker/readme/readme./readme.webrtc.md) |
+| compose/compose-janus.yaml | bytedesk/janus | 18089/18188 | [WebRTC](./docker/readme/readme./readme.webrtc.md) |
+| compose/compose-searxng.yaml | searxng | 18888 | [SearXNG](./docker/readme/readme./readme.searxng.md) |
+| compose/compose-neo4j.yaml | neo4j:5.26.30 | 17474/17687 | [Neo4j](./docker/readme/readme./readme.neo4j.md) |
+| compose/compose-logstash.yaml | logstash:9.4.2 | 19600 | [Logstash](./docker/readme/readme./readme.logstash.md) |
+| compose/compose-kibana.yaml | kibana:9.4.2 | 15601 | [Kibana](./docker/readme/readme./readme.kibana.md) |
+| compose/compose-minio.yaml | minio | 19000/19001 | [MinIO](./docker/readme/readme./readme.minio.md) |
+| compose/compose-rustfs.yaml | rustfs | 19000/19001 | [RustFS](./docker/readme/readme./readme.rustfs.md) |
+| compose/compose-prometheus.yaml | prometheus | 19090 | [Observability](./docker/readme/readme./readme.observability.md) |
+| compose/compose-grafana.yaml | grafana | 13000 | [Observability](./docker/readme/readme./readme.observability.md) |
+| compose/compose-zipkin.yaml | zipkin | 19411 | [Observability](./docker/readme/readme./readme.observability.md) |
+| compose/compose-otelcol.yaml | otel/opentelemetry-collector-contrib | 14317/14318 | [Observability](./docker/readme/readme./readme.observability.md) — OTLP receiver, forwards traces to Zipkin |
 | compose/compose-gotenberg.yaml | gotenberg/gotenberg:8 | internal only (no host port) | File preview conversion sidecar; see [File Preview docs](../../../docs/docs/development/filepreview.md) |
-| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James mail server](./readme/readme.james.md) |
+| compose/compose-james.yaml | apache/james:jpa-latest | 10025/10465/10587/10143/10993/10110/10995/18000 | [James mail server](./docker/readme/readme./readme.james.md) |
 
-Other files: `start.sh`/`stop.sh` (compose launcher), `watchdog.sh` (app watchdog, see [watchdog guide](./readme/readme.watchdog.md)), `.env` (secrets), `one/` (all-in-one deployment).
+Other files: `start.sh`/`stop.sh` (compose launcher), `watchdog.sh` (app watchdog, see [watchdog guide](./docker/readme/readme./readme.watchdog.md)), `.env` (secrets), `one/` (all-in-one deployment).
