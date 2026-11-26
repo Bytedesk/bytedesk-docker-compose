@@ -1,0 +1,10 @@
+﻿CidrBlock,Protocol,Port,Action,FirewallRuleDescription
+0.0.0.0/0,UDP,10000-10200,允许,janus
+0.0.0.0/0,TCP,8088,允许,janus http
+0.0.0.0/0,TCP,8089,允许,janus https
+0.0.0.0/0,TCP,7088,允许,janus admin http
+0.0.0.0/0,TCP,7889,允许,janus admin https
+0.0.0.0/0,TCP,8188,允许,janus ws
+0.0.0.0/0,TCP,8989,允许,janus wss
+0.0.0.0/0,TCP,7188,允许,janus admin ws
+0.0.0.0/0,TCP,7989,允许,janus admin wss
